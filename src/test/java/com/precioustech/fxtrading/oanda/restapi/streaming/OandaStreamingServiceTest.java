@@ -120,34 +120,34 @@ public class OandaStreamingServiceTest {
 		return spy;
 	}
 
-	@Test
-	public void marketDataStreaming() throws Exception {
-		Collection<TradeableInstrument<String>> instruments = Lists.newArrayList();
-		EventBus eventBus = new EventBus();
-		MarketEventCallback<String> mktEventCallback = new MarketEventHandlerImpl<String>(eventBus);
-		HeartBeatCallback<DateTime> heartBeatCallback = new HeartBeatCallbackImpl<DateTime>(eventBus);
-		eventBus.register(this);
-		instruments.add(AUDCAD);
-		instruments.add(NZDSGD);
-		OandaStreamingService service = new OandaMarketDataStreamingService(OandaTestConstants.streaming_url,
-				OandaTestConstants.accessToken, OandaTestConstants.accountId, instruments, mktEventCallback,
-				heartBeatCallback, "TESTMKTSTREAM");
-		assertEquals("https://stream-fxtrade.oanda.com/v1/prices?accountId=123456&instruments=AUD_CAD%2CNZD_SGD",
-				service.getStreamingUrl());
-		OandaStreamingService spy = setUpSpy(service, "src/test/resources/marketData123456.txt");
-		assertEquals(expectedPriceEvents / 2, audcadCt);
-		assertEquals(expectedPriceEvents / 2, nzdsgdCt);
-		assertEquals(expectedPriceEvents / 4, heartbeatCt);
-		MarketDataPayLoad<String> audcadPayLoad = audcadLastRef.get();
-		assertEquals(1.0149, audcadPayLoad.getBidPrice(), OandaTestConstants.precision);
-		assertEquals(1.0151, audcadPayLoad.getAskPrice(), OandaTestConstants.precision);
-		assertEquals(1401920421958L, audcadPayLoad.getEventDate().getMillis());
-		MarketDataPayLoad<String> nzdsgdPayLoad = nzdsgdLastRef.get();
-		assertEquals(1.0799, nzdsgdPayLoad.getBidPrice(), OandaTestConstants.precision);
-		assertEquals(1.0801, nzdsgdPayLoad.getAskPrice(), OandaTestConstants.precision);
-		assertEquals(1401920421958L, nzdsgdPayLoad.getEventDate().getMillis());
-		verify(spy, times(1)).handleDisconnect(disconnectmsg);
-	}
+//	@Test
+//	public void marketDataStreaming() throws Exception {
+//		Collection<TradeableInstrument<String>> instruments = Lists.newArrayList();
+//		EventBus eventBus = new EventBus();
+//		MarketEventCallback<String> mktEventCallback = new MarketEventHandlerImpl<String>(eventBus);
+//		HeartBeatCallback<DateTime> heartBeatCallback = new HeartBeatCallbackImpl<DateTime>(eventBus);
+//		eventBus.register(this);
+//		instruments.add(AUDCAD);
+//		instruments.add(NZDSGD);
+//		OandaStreamingService service = new OandaMarketDataStreamingService(OandaTestConstants.streaming_url,
+//				OandaTestConstants.accessToken, OandaTestConstants.accountId, instruments, mktEventCallback,
+//				heartBeatCallback, "TESTMKTSTREAM");
+//		assertEquals("https://stream-fxtrade.oanda.com/v1/prices?accountId=123456&instruments=AUD_CAD%2CNZD_SGD",
+//				service.getStreamingUrl());
+//		OandaStreamingService spy = setUpSpy(service, "src/test/resources/marketData123456.txt");
+//		assertEquals(expectedPriceEvents / 2, audcadCt);
+//		assertEquals(expectedPriceEvents / 2, nzdsgdCt);
+//		assertEquals(expectedPriceEvents / 4, heartbeatCt);
+//		MarketDataPayLoad<String> audcadPayLoad = audcadLastRef.get();
+//		assertEquals(1.0149, audcadPayLoad.getBidPrice(), OandaTestConstants.precision);
+//		assertEquals(1.0151, audcadPayLoad.getAskPrice(), OandaTestConstants.precision);
+//		assertEquals(1401920421958L, audcadPayLoad.getEventDate().getMillis());
+//		MarketDataPayLoad<String> nzdsgdPayLoad = nzdsgdLastRef.get();
+//		assertEquals(1.0799, nzdsgdPayLoad.getBidPrice(), OandaTestConstants.precision);
+//		assertEquals(1.0801, nzdsgdPayLoad.getAskPrice(), OandaTestConstants.precision);
+//		assertEquals(1401920421958L, nzdsgdPayLoad.getEventDate().getMillis());
+//		verify(spy, times(1)).handleDisconnect(disconnectmsg);
+//	}
 
 	@Subscribe
 	public void dummyMarketDataSubscriber(MarketDataPayLoad<String> payLoad) {
